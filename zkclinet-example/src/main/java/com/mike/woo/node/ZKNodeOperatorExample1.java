@@ -72,7 +72,7 @@ public class ZKNodeOperatorExample1 implements Watcher {
      */
     public void createZKNodeWithCallBack(String nodePath, byte[] data, List<ACL> acls) {
         try {
-            String ctx = "{'data':'success'}";
+            String ctx = "{'create':'success'}";
             // zookeeper.create(path, data, acls, CreateMode.PERSISTENT, new CreateCallBack(), ctx);
 
             countDownLatch = new CountDownLatch(1);
