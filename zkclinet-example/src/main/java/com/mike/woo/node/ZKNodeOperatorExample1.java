@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 /**
- *
+ * ZK节点创建示例，分为同步和异步两种方式
  * @author Eric Gui
  * @date 2018/8/31
  */
@@ -44,14 +44,44 @@ public class ZKNodeOperatorExample1 implements Watcher {
 
     /**
      * 同步方式创建ZK节点，不支持子节点的递归创建
-     * @param path
-     * @param data
-     * @param acls
+     * @param nodePath 创建的路径
+     * @param data 节点数据的byte[]
+     * @param acls 控制权限策略
      */
-    public void createZKNode(String path, byte[] data, List<ACL> acls) {
+    public void createZKNode(String nodePath, byte[] data, List<ACL> acls) {
         try {
-            String result = zookeeper.create(path, data, acls, CreateMode.PERSISTENT);
+            /**
+             * createMode：节点类型，枚举类型
+             *      PERSISTENT：持久节点
+             *      PERSISTENT_SEQUENTIAL：持久顺序节点
+             *      EPHEMERAL：临时节点
+             *      EPHEMERAL_SEQUENTIAL：临时顺序节点
+             */
+            String result = zookeeper.create(nodePath, data, acls, CreateMode.PERSISTENT);
             log.info("create ZKNode: {} success", result);
+        } catch (Exception e) {
+            log.warn("create ZKNode happened exception, ", e);
+        }
+    }
+
+    /**
+     * 异步方式创建ZK节点，不支持子节点的递归创建，需要提供一个callback函数
+     * @param nodePath 创建的路径
+     * @param data 节点数据的byte[]
+     * @param acls 控制权限策略
+     */
+    public void createZKNodeWithCallBack(String nodePath, byte[] data, List<ACL> acls) {
+        try {
+            String ctx = "{'data':'success'}";
+            // zookeeper.create(path, data, acls, CreateMode.PERSISTENT, new CreateCallBack(), ctx);
+
+            countDownLatch = new CountDownLatch(1);
+            zookeeper.create(nodePath, data, acls, CreateMode.PERSISTENT, (rc, path, obj, name) -> {
+                log.info("create node: {} success", path);
+                log.info("ctx: {}", obj);
+                countDownLatch.countDown();
+            }, ctx);
+            countDownLatch.await();
         } catch (Exception e) {
             log.warn("create ZKNode happened exception, ", e);
         }
@@ -66,6 +96,11 @@ public class ZKNodeOperatorExample1 implements Watcher {
     public static void main(String[] args) throws Exception {
         ZKNodeOperatorExample1 example = new ZKNodeOperatorExample1(ZK_STANDALONE_SERVER_PATH);
         countDownLatch.await();
-        example.createZKNode("/mikewoo/nodeCreateTest", "nodeCreateTest-data".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE);
+        log.info("connection state is {}", example.zookeeper.getState());
+        // 同步方式创建ZK节点
+        // example.createZKNode("/mikewoo/nodeCreateTest", "nodeCreateTest-data".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE);
+
+        // 异步方式创建ZK节点
+        example.createZKNodeWithCallBack("/mikewoo/nodeCreateAsyncTest", "nodeCreateAsyncTest-data".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE);
     }
 }
