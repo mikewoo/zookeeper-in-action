@@ -28,15 +28,15 @@ public class ZKConnectExample2 implements Watcher {
         long sessionId = zooKeeper.getSessionId();
         byte[] sessionPasswd = zooKeeper.getSessionPasswd();
 
-        log.warn("客户端开始连接zookeeper服务器...");
-        log.warn("当前连接状态： {}", zooKeeper.getState());
+        log.info("客户端开始连接zookeeper服务器...");
+        log.info("当前连接状态： {}", zooKeeper.getState());
         countDownLatch.await();
-        log.warn("当前连接状态： {}", zooKeeper.getState());
+        log.info("当前连接状态： {}", zooKeeper.getState());
 
         Thread.sleep(2000);
 
         // 开始会话重连
-        log.warn("开始会话重连...");
+        log.info("开始会话重连...");
         countDownLatch = new CountDownLatch(1);
 
         ZooKeeper zkSession = new ZooKeeper(ZK_CLUSTER_SERVER_PATH,
@@ -44,15 +44,15 @@ public class ZKConnectExample2 implements Watcher {
                                             new ZKConnectExample2(),
                                             sessionId,
                                             sessionPasswd);
-        log.warn("重新连接状态zkSession：{}", zkSession.getState());
+        log.info("重新连接状态zkSession：{}", zkSession.getState());
         countDownLatch.await();
-        log.warn("重新连接状态zkSession：{}", zkSession.getState());
+        log.info("重新连接状态zkSession：{}", zkSession.getState());
 
     }
 
     @Override
     public void process(WatchedEvent event) {
-        log.warn("收到watch通知： {}", event);
+        log.info("收到watch通知： {}", event);
         countDownLatch.countDown();
     }
 }

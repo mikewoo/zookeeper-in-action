@@ -39,15 +39,15 @@ public class ZKConnectExample1 implements Watcher {
          */
         ZooKeeper zooKeeper = new ZooKeeper(ZK_CLUSTER_SERVER_PATH, TIMEOUT, new ZKConnectExample1());
 
-        log.warn("客户端开始连接zookeeper服务器...");
-        log.warn("当前连接状态： {}", zooKeeper.getState());
+        log.info("客户端开始连接zookeeper服务器...");
+        log.info("当前连接状态： {}", zooKeeper.getState());
         countDownLatch.await();
-        log.warn("当前连接状态： {}", zooKeeper.getState());
+        log.info("当前连接状态： {}", zooKeeper.getState());
     }
 
     @Override
     public void process(WatchedEvent event) {
-        log.warn("收到watch通知： {}", event);
+        log.info("收到watch通知： {}", event);
         countDownLatch.countDown();
     }
 }
