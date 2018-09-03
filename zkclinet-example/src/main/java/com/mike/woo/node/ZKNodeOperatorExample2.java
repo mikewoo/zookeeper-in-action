@@ -1,12 +1,12 @@
 package com.mike.woo.node;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.zookeeper.*;
-import org.apache.zookeeper.data.ACL;
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
+import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -58,8 +58,9 @@ public class ZKNodeOperatorExample2 implements Watcher {
         Stat stat = server.getZookeeper().setData("/mikewoo/nodeCreateAsyncTest", "setDataTest".getBytes(), 0);
         log.info("current version: {}", stat.getVersion());
 
-        byte[] data = server.getZookeeper().getData("/mikewoo/nodeCreateAsyncTest", null, stat);
-        log.info("current data: {}", data.toString());
+        Stat status = new Stat();
+        byte[] data = server.getZookeeper().getData("/mikewoo/nodeCreateAsyncTest", true, status);
+        log.info("current data: {}", new String(data));
     }
 
     public ZooKeeper getZookeeper() {
