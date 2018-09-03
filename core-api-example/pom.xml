@@ -10,9 +10,9 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>zkclinet-example</artifactId>
+    <artifactId>core-api-example</artifactId>
 
-    <name>zkclinet-example</name>
+    <name>core-api-example</name>
     <!-- FIXME change it to the project's website -->
     <url>http://www.example.com</url>
 
