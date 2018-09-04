@@ -1,5 +1,6 @@
 package com.mikewoo.curator;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -29,6 +30,10 @@ public class CuratorClient {
 
     private int sleepMs;
 
+    private String scheme;
+
+    private byte[] auth;
+
     /**
      * 实例化ZK Client
      */
@@ -44,11 +49,21 @@ public class CuratorClient {
         this(namespace, timeout, 3, 3000);
     }
 
+    public CuratorClient(String namespace, String scheme, byte[] auth) {
+        this(namespace, DEFAULT_TIMEOUT, 3, 300, scheme, auth);
+    }
+
     public CuratorClient(String namespace, int timeout, int retryTimes, int sleepMs) {
+        this(namespace, timeout, retryTimes, sleepMs, null, null);
+    }
+
+    public CuratorClient(String namespace, int timeout, int retryTimes, int sleepMs, String scheme, byte[] auth) {
         this.namespace = namespace;
         this.timeout = timeout;
         this.retryTimes = retryTimes;
         this.sleepMs = sleepMs;
+        this.auth = auth;
+        this.scheme = scheme;
         connect();
     }
 
@@ -56,11 +71,16 @@ public class CuratorClient {
         // 连接失败重试策略
         RetryPolicy retryPolicy = new RetryNTimes(retryTimes, sleepMs);
 
-        curator = CuratorFrameworkFactory.builder().connectString(ZK_STANDALONE_SERVER_PATH)
+        CuratorFrameworkFactory.Builder builder = CuratorFrameworkFactory.builder()
+                .connectString(ZK_STANDALONE_SERVER_PATH)
                 .sessionTimeoutMs(timeout)
                 .retryPolicy(retryPolicy)
-                .namespace(namespace)
-                .build();
+                .namespace(this.namespace);
+        if (StringUtils.isNotBlank(scheme) && auth != null) {
+            builder.authorization(scheme, auth);
+        }
+
+        curator = builder.build();
 
         curator.start();
     }
