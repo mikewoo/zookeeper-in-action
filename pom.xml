@@ -11,6 +11,7 @@
     <modules>
         <module>core-api-example</module>
         <module>curator-example</module>
+        <module>configuration-management-example</module>
     </modules>
 
     <properties>
