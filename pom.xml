@@ -12,6 +12,7 @@
         <module>core-api-example</module>
         <module>curator-example</module>
         <module>configuration-management-example</module>
+        <module>distributed-lock-example</module>
     </modules>
 
     <properties>

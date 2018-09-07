@@ -1,13 +1,10 @@
-package com.mikewoo.curator.watcher;
+package com.mikewoo.study.curator.watcher;
 
-import com.mikewoo.curator.CuratorClient;
+import com.mikewoo.study.curator.CuratorClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.api.CuratorWatcher;
 import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.framework.recipes.cache.NodeCache;
-import org.apache.zookeeper.CreateMode;
-import org.apache.zookeeper.ZooDefs;
 
 import java.util.concurrent.CountDownLatch;
 

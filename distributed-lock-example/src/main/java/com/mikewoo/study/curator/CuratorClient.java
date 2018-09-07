@@ -1,4 +1,4 @@
-package com.mikewoo.curator;
+package com.mikewoo.study.curator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.RetryPolicy;
@@ -14,6 +14,7 @@ import org.apache.curator.retry.RetryNTimes;
 public class CuratorClient {
 
     public final static String ZK_STANDALONE_SERVER_PATH = "192.168.33.100:2181";
+
     public final static String ZK_CLUSTER_SERVER_PATH = "192.168.33.101:2181,192.168.33.102:2181,192.168.33.103:2181";
 
     public final static String DEFAULT_NAMESPACE = "workspace";

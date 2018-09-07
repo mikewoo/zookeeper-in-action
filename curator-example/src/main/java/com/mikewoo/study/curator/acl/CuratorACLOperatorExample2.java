@@ -1,7 +1,7 @@
-package com.mikewoo.curator.acl;
+package com.mikewoo.study.curator.acl;
 
-import com.mikewoo.curator.CuratorClient;
-import com.mikewoo.curator.utils.AclUtils;
+import com.mikewoo.study.curator.CuratorClient;
+import com.mikewoo.study.curator.utils.AclUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.imps.CuratorFrameworkState;

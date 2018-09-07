@@ -1,18 +1,11 @@
-package com.mikewoo.curator.acl;
+package com.mikewoo.study.curator.acl;
 
-import com.mikewoo.curator.CuratorClient;
-import com.mikewoo.curator.utils.AclUtils;
+import com.mikewoo.study.curator.CuratorClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.imps.CuratorFrameworkState;
-import org.apache.zookeeper.CreateMode;
-import org.apache.zookeeper.ZooDefs;
-import org.apache.zookeeper.data.ACL;
-import org.apache.zookeeper.data.Id;
 import org.apache.zookeeper.data.Stat;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -21,28 +14,26 @@ import java.util.concurrent.CountDownLatch;
  * @date 2018/9/4
  */
 @Slf4j
-public class CuratorACLOperatorExample5 {
+public class CuratorACLOperatorExample4 {
 
     public static void main(String[] args) {
         CountDownLatch countDownLatch = new CountDownLatch(1);
-        CuratorClient client = new CuratorClient("mikewoo");
+        // 建立ZK Client连接，指定认证方式
+        CuratorClient client = new CuratorClient("mikewoo", "digest", "eric:123456".getBytes());
         CuratorFrameworkState state = client.getCurator().getState();
         log.info("state: {}", state);
 
         try {
-            String path = "/curator/acl/ipAcl";
-
-            List<ACL> acls = new ArrayList<>();
-            Id clientId = new Id("ip", "192.168.10.50");
-            Id localId = new Id("ip", "192.168.33.100");
-            acls.add(new ACL(ZooDefs.Perms.ALL, localId));
-            acls.add(new ACL(ZooDefs.Perms.READ | ZooDefs.Perms.CREATE, clientId));
-
-            // 创建节点
-            // createNode(client, path, acls);
+            String path = "/curator/acl/digest2/applyToParents2";
 
             // 获取节点数据
-            getNodeData(client, path);
+            // getNodeData(client, path);
+
+            // 更新节点数据
+            //setNodeData(client, path);
+
+            // 删除节点
+            deleteNode(client, path);
 
             countDownLatch.await();
         } catch (Exception e) {
@@ -55,18 +46,27 @@ public class CuratorACLOperatorExample5 {
     }
 
     /**
-     * 创建节点
+     * 删除节点
      * @param client
      * @param path
-     * @param acls
      * @throws Exception
      */
-    private static void createNode(CuratorClient client, String path, List<ACL> acls) throws Exception {
-        client.getCurator().create()
-                .creatingParentsIfNeeded()
-                .withMode(CreateMode.PERSISTENT)
-                .withACL(acls)
-                .forPath(path, "ipAcl".getBytes());
+    private static void deleteNode(CuratorClient client, String path) throws Exception {
+        client.getCurator().delete()
+                .guaranteed()
+                .deletingChildrenIfNeeded()
+                .withVersion(1)
+                .forPath(path);
+    }
+
+    /**
+     * 更新节点数据
+     * @param client
+     * @param path
+     * @throws Exception
+     */
+    private static void setNodeData(CuratorClient client, String path) throws Exception {
+        client.getCurator().setData().withVersion(0).forPath(path, "applyToParents2-new".getBytes());
     }
 
     /**

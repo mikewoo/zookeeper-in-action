@@ -1,6 +1,6 @@
-package com.mikewoo.curator.node;
+package com.mikewoo.study.curator.node;
 
-import com.mikewoo.curator.CuratorClient;
+import com.mikewoo.study.curator.CuratorClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.imps.CuratorFrameworkState;

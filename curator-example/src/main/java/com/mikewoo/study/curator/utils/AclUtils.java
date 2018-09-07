@@ -1,4 +1,4 @@
-package com.mikewoo.curator.utils;
+package com.mikewoo.study.curator.utils;
 
 import org.apache.zookeeper.server.auth.DigestAuthenticationProvider;
 
