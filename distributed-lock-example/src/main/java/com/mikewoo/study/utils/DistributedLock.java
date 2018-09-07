@@ -6,9 +6,7 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.ZooDefs;
-import org.joda.time.LocalDateTime;
 
-import java.time.LocalTime;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -62,6 +60,7 @@ public class DistributedLock {
 
     /**
      * 获取分布式锁
+     * @return 获取锁是否成功
      */
     public boolean getDistributedLock() {
         while (true) {
@@ -90,6 +89,8 @@ public class DistributedLock {
 
     /**
      * 获取分布式锁，带超时时间
+     * @param timeout 毫秒值
+     * @return 获取锁是否成功
      */
     public boolean getDistributedLock(int timeout) {
         long begin = System.currentTimeMillis();
@@ -124,6 +125,7 @@ public class DistributedLock {
 
     /**
      * 释放分布式锁
+     * @return 释放锁是否成功
      */
     public boolean releaseDistributedLock() {
         try {
@@ -142,7 +144,7 @@ public class DistributedLock {
     /**
      * 添加节点Watcher事件
      *
-     * @param nodePath
+     * @param nodePath 锁节点对应父节点路径
      */
     private void addWatchToLock(String nodePath) throws Exception {
         PathChildrenCache childrenCache = new PathChildrenCache(client.getCurator(), nodePath, true);
